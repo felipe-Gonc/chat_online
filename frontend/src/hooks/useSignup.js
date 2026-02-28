@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import { useAuthContext } from "../context/AuthContext";
 
 const useSignup = () => {
   const [loading, setLoading] = useState(false);
+  const { authUser, setAuthUser } = useAuthContext();
 
   const signup = async ({
     fullName,
@@ -22,9 +24,9 @@ const useSignup = () => {
     if (!success) return;
 
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("http://localhost:5001/api/auth/signup", {
         method: "POST",
-        headers: { "Content-Type": "applicatio/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           fullName,
           userName,
@@ -35,7 +37,12 @@ const useSignup = () => {
       });
 
       const data = await res.json();
-      console.log(data);
+
+      if (data.error) {
+        throw new error(data.error);
+      }
+      localStorage.setItem("chat-user", JSON.stringify(data));
+      setAuthUser(data);
 
       setLoading(true);
     } catch (error) {
@@ -71,4 +78,6 @@ function handleInputErrors({
     toast.error("A senha tem menos de 6 caracteres");
     return false;
   }
+
+  return true;
 }
