@@ -61,13 +61,14 @@ export const login = async (req, res) => {
     const { userName, password } = req.body;
 
     const user = await User.findOne({ userName });
+    
     const passwordCorrect = await bcrypt.compare(
       password,
       user?.password || "",
     );
 
     //VERIFICA INFOS DO USER
-    if (!user || passwordCorrect) {
+    if (!user || !passwordCorrect) {
       res.status(400).json({ error: "Credencial invalida" });
     }
 

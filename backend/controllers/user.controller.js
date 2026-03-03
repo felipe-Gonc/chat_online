@@ -1,6 +1,6 @@
 import User from "../models/user.models.js";
 
-export const getUsersForSideBar = async (req, res) => {
+const getUsersForSideBar = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
 
@@ -12,3 +12,6 @@ export const getUsersForSideBar = async (req, res) => {
     res.status(500).json({ error: "Error interno no server." });
   }
 };
+
+
+export default getUsersForSideBar;
